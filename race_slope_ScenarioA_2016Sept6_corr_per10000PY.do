@@ -121,15 +121,15 @@ gen U = rnormal(0,1)
 at each interval. 
 a. Each person's underlying time to death is generated for each age interval, 
 conditional on the past provided the person has not died in a previous interval, 
-under an exponential survival distribtion. If the person’s generated survival 
+under an exponential survival distribtion. If the personâ€™s generated survival 
 time exceeds the length of the interval between study visits j and j+1, 
 she is considered alive at study visit j+1 and a new survival time is 
 generated for the next interval conditional on history up to the start of the 
-interval, and the process is repeated until the person’s survival time falls 
+interval, and the process is repeated until the personâ€™s survival time falls 
 within a given interval or the end of the study, whichever comes first. Each 
-person’s hazard function is defined as:
+personâ€™s hazard function is defined as:
 h(tij|x) = lambda*exp(g1*exposurei + g2*Ui + g3*exposurei*Ui + g4*stroke_historyi)
-A person’s survival time for a given time interval at risk is generated using 
+A personâ€™s survival time for a given time interval at risk is generated using 
 the inverse cumulative hazard function transformation formula described by 
 Bender et al. (Stat Med 2011)
 b. Stroke code is adapted for survival time code.*/
@@ -954,7 +954,12 @@ scalar p_stroke_exp0 = r(mean)
 /******************************************/
 
 /******************************************/
-*distribution of L among people at risk for stroke in each age group
+*distribution of U among people at risk for stroke in each age group
+*birth
+qui sum U if (exposure==1)
+scalar meanUatrisk0_exp1= r(mean)
+qui sum U if (exposure==0)
+scalar meanUatrisk0_exp0= r(mean)
 *age 45
 qui sum U if (exposure==1 & strokeage !=. & strokeage>=45)
 scalar meanUatrisk45_exp1= r(mean)
