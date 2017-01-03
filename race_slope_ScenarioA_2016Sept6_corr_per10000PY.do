@@ -1,7 +1,7 @@
 /******************************************************************************/
-/***	Scenario A (U influences stroke but not mortality).					***/
-/***	Modify the local parameters by changing the preamble file called	***/
-/***	to modify the scenario.												***/
+/***	Scenario A (U influences stroke but not mortality).		    ***/
+/***	Modify the local parameters by changing the preamble file called    ***/
+/***	to modify the scenario.						    ***/
 /******************************************************************************/
 
 set more off
