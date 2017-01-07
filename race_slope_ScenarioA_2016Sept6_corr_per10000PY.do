@@ -1,7 +1,7 @@
 /******************************************************************************/
-/***	Scenario A (U influences stroke but not mortality).					***/
-/***	Modify the local parameters by changing the preamble file called	***/
-/***	to modify the scenario.												***/
+/***	Scenario A (U influences stroke but not mortality).		    ***/
+/***	Modify the local parameters by changing the preamble file called    ***/
+/***	to modify the scenario.						    ***/
 /******************************************************************************/
 
 set more off
@@ -121,15 +121,15 @@ gen U = rnormal(0,1)
 at each interval. 
 a. Each person's underlying time to death is generated for each age interval, 
 conditional on the past provided the person has not died in a previous interval, 
-under an exponential survival distribtion. If the person’s generated survival 
+under an exponential survival distribtion. If the personâ€™s generated survival 
 time exceeds the length of the interval between study visits j and j+1, 
 she is considered alive at study visit j+1 and a new survival time is 
 generated for the next interval conditional on history up to the start of the 
-interval, and the process is repeated until the person’s survival time falls 
+interval, and the process is repeated until the personâ€™s survival time falls 
 within a given interval or the end of the study, whichever comes first. Each 
-person’s hazard function is defined as:
+personâ€™s hazard function is defined as:
 h(tij|x) = lambda*exp(g1*exposurei + g2*Ui + g3*exposurei*Ui + g4*stroke_historyi)
-A person’s survival time for a given time interval at risk is generated using 
+A personâ€™s survival time for a given time interval at risk is generated using 
 the inverse cumulative hazard function transformation formula described by 
 Bender et al. (Stat Med 2011)
 b. Stroke code is adapted for survival time code.*/
@@ -858,6 +858,16 @@ scalar N_exp0 = r(N) - r(mean)*r(N)
 
 /******************************************/
 *pull percentage of deaths at start and end of stroke f/u
+*age 45, 50, 55, ..., 95
+foreach x in 45 50 55 60 65 70 75 80 85 90 95 {
+	summarize death`x', meanonly
+	scalar p_death`x' = r(mean)
+	summarize death`x' if (exposure==1), meanonly
+	scalar p_death`x'_exp1 = r(mean)
+	summarize death`x' if (exposure==0), meanonly
+	scalar p_death`x'_exp0 = r(mean)
+}
+/*******************************to delete************************************************************
 summarize death45, meanonly
 scalar p_death45 = r(mean)
 summarize death45 if (exposure==1), meanonly
@@ -933,7 +943,8 @@ scalar p_death95 = r(mean)
 summarize death95 if (exposure==1), meanonly
 scalar p_death95_exp1 = r(mean)
 summarize death95 if (exposure==0), meanonly
-scalar p_death95_exp0 = r(mean)
+scalar p_death95_exp0 = r(mean)*************************************************end delete*******/
+
 
 *pull median survival time
 summarize survage, detail 
@@ -954,7 +965,23 @@ scalar p_stroke_exp0 = r(mean)
 /******************************************/
 
 /******************************************/
-*distribution of L among people at risk for stroke in each age group
+*distribution of U among people at risk for stroke in each age group at birth and in 5-year intervals starting at age 45
+*birth
+qui sum U if (exposure==1)
+scalar meanUatrisk0_exp1= r(mean)
+qui sum U if (exposure==0)
+scalar meanUatrisk0_exp0= r(mean)
+
+*age 45, 50, 55, ..., 95
+foreach x in 45 50 55 60 65 70 75 80 85 90 95 {
+	qui sum U if (exposure==1 & strokeage !=. & strokeage>=`x')
+	scalar meanUatrisk`x'_exp1= r(mean)
+	scalar Natrisk`x'_exp1= r(N)
+	qui sum U if (exposure==0 & strokeage !=. & strokeage>=`x')
+	scalar meanUatrisk`x'_exp0= r(mean)
+	scalar Natrisk`x'_exp0= r(N)
+}
+/*******************************to delete************************************************************
 *age 45
 qui sum U if (exposure==1 & strokeage !=. & strokeage>=45)
 scalar meanUatrisk45_exp1= r(mean)
@@ -1024,11 +1051,36 @@ scalar meanUatrisk90_exp1= r(mean)
 scalar Natrisk90_exp1= r(N)
 qui sum U if (exposure==0 & strokeage !=. & strokeage>=90)
 scalar meanUatrisk90_exp0= r(mean)
-scalar Natrisk90_exp0= r(N)
+scalar Natrisk90_exp0= r(N)*******************end delete**********************************************/
 /******************************************/
 
 /******************************************/
-*age-stratified incidence rates by exposure
+*age-stratified incidence rates by exposure, incidence rate differences, and incidence rate ratios
+/*temp loop code*/ 
+foreach x in 45to55 55to65 65to75 75to85 85to95 {
+	qui stset strokeage, failure(stroke`x'==1) id(id) enter(strokeage`x'_start) exit(strokeage`x'_end)
+	*stroke IR for blacks
+	qui stptime if (exposure==1), title(person-years) per(10000)
+	scalar nstrokes`x'_exp1 = r(failures)
+	scalar ptime`x'_exp1 = r(ptime)
+	scalar strokerate10000pys`x'_exp1 = r(rate)
+	*stroke IR for whites
+	qui stptime if (exposure==0), title(person-years) per(10000)
+	scalar nstrokes`x'_exp0 = r(failures)
+	scalar ptime`x'_exp0 = r(ptime)
+	scalar strokerate10000pys`x'_exp0 = r(rate)
+	*stroke IRR and IRD for blacks vs. whites
+	qui stir exposure
+	scalar strokeIRR`x' = r(irr)
+	*scalar strokelnIRR`x'_SE = sqrt((1/nstrokes`x'_exp1)+(1/nstrokes`x'_exp0)) //this isn't what I want--I want SE(IRR). also the code i wrote isn't working
+	scalar strokeIRR`x'_ub = r(ub_irr)
+	scalar strokeIRR`x'_lb = r(lb_irr)
+	scalar strokeIRD`x' = r(ird)*10000
+	scalar strokeIRD`x'_SE = sqrt((nstrokes`x'_exp1/((ptime`x'_exp1)^2))+(1/nstrokes`x'_exp0/((ptime`x'_exp0)^2)))*10000 //can I simply multiply the SE(IRD) by the PY?
+	scalar strokeIRD`x'_ub = r(ub_ird)*10000
+	scalar strokeIRD`x'_lb = r(lb_ird)*10000
+}
+/********************************to delete************************************************************
 *age 45 to 55
 qui stset strokeage, failure(stroke45to55==1) id(id) enter(strokeage45to55_start) exit(strokeage45to55_end)
 *stroke IR for blacks
@@ -1044,12 +1096,13 @@ scalar strokerate10000pys45to55_exp0 = r(rate)
 *stroke IRR and IRD for blacks vs. whites
 qui stir exposure
 scalar strokeIRR45to55 = r(irr)
+scalar strokeln(IRR)45to55_SE = sqrt((nstrokes45to55_exp1/((ptime45to55_exp1)^2))+(1/nstrokes45to55_exp0/((ptime45to55_exp0)^2))) //this isn't quite right
 scalar strokeIRR45to55_ub = r(ub_irr)
 scalar strokeIRR45to55_lb = r(lb_irr)
 scalar strokeIRD45to55 = r(ird)*10000
+scalar strokeIRD45to55_SE = sqrt((1/nstrokes45to55_exp1)+(1/nstrokes45to55_exp0))*10000 //can I simply multiply the SE(IRD) by the PY?
 scalar strokeIRD45to55_ub = r(ub_ird)*10000
 scalar strokeIRD45to55_lb = r(lb_ird)*10000
-
 
 *age 55 to 65
 qui stset strokeage, failure(stroke55to65==1) id(id) enter(strokeage55to65_start) exit(strokeage55to65_end)
@@ -1133,12 +1186,21 @@ scalar strokeIRR85to95_ub = r(ub_irr)
 scalar strokeIRR85to95_lb = r(lb_irr)
 scalar strokeIRD85to95 = r(ird)*10000
 scalar strokeIRD85to95_ub = r(ub_ird)*10000
-scalar strokeIRD85to95_lb = r(lb_ird)*10000
+scalar strokeIRD85to95_lb = r(lb_ird)*10000*******************end delete*********************************************/
 /******************************************/
 
 /******************************************/
 
 *pull n strokes per 5-year intervals
+*age 45, 50, 55, ..., 95
+foreach x in 45to55 55to65 65to75 75to85 85to95 {
+	sum stroke`x' if exposure==0
+	scalar nstrokes`x'_exp0 = r(mean)*r(N)
+
+	sum stroke`x' if exposure==1
+	scalar nstrokes`x'_exp1 = r(mean)*r(N)
+}
+/*******************************to delete************************************************************
 sum stroke45to50 if exposure==0
 scalar nstrokes45to50_exp0 = r(mean)*r(N)
 sum stroke50to55 if exposure==0
@@ -1179,5 +1241,5 @@ scalar nstrokes80to85_exp1 = r(mean)*r(N)
 sum stroke85to90 if exposure==1
 scalar nstrokes85to90_exp1 = r(mean)*r(N)
 sum stroke90to95 if exposure==1
-scalar nstrokes90to95_exp1 = r(mean)*r(N)
+scalar nstrokes90to95_exp1 = r(mean)*r(N)*******************end delete*********************************************/
 
