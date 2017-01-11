@@ -924,6 +924,7 @@ foreach x in 45to55 55to65 65to75 75to85 85to95 {
 	*stroke IRR and IRD for blacks vs. whites
 	qui stir exposure
 	scalar strokeIRR`x' = r(irr)
+	scalar strokelnIRR`x' = ln(r(irr))
 	*scalar strokelnIRR`x'_SE = sqrt((1/nstrokes`x'_exp1)+(1/nstrokes`x'_exp0)) //this isn't what I want--I want SE(IRR). also the code i wrote isn't working
 	scalar strokeIRR`x'_ub = r(ub_irr)
 	scalar strokeIRR`x'_lb = r(lb_irr)
