@@ -7,7 +7,7 @@ Outline of simulation study procedures:
 (4) Quantify the magnitude of bias in each scenario by comparing the estimated racial disparity in stroke in each age band averaged across the 2,000 samples with the known “true” effect of race on stroke risk. By comparing the observed associations with the “true” effect in our simulations, we are able to quantify the extent to which selective survival contributes to the age attenuation of racial disparities in stroke in each causal scenario.
 
 Explanation of Stata files:
--master_simulation.do: Calls all of the necessary files to run B iterations of sample generation for each causal scenario. 
--data_generation_analysis.do: Data-generation and analysis file. The specific causal scenario depends on the input parameters specified in the preamble file.
--race_slope_preamble_ScenarioX.do (where X=1, 2, or 3. X=1 refers to Scenario A, X=2 refers to Scenario B, and X=3 refers to Scenario C): This file creates global variables for the specific input parameters for each causal scenario.
--run_simulation.do: runs B iterations of sample generation and analysis for each causal scenario, summarizes results across each scenario, and stores summarized results in an Excel file. 
+(1) master_simulation.do: Calls all of the necessary files to run B iterations of sample generation for each causal scenario. 
+(2) data_generation_analysis.do: Data-generation and analysis file. The specific causal scenario depends on the input parameters specified in the preamble file.
+(3) race_slope_preamble_ScenarioX.do (where X=1, 2, or 3. X=1 refers to Scenario A, X=2 refers to Scenario B, and X=3 refers to Scenario C): This file creates global variables for the specific input parameters for each causal scenario.
+(4) run_simulation.do: runs B iterations of sample generation and analysis for each causal scenario, summarizes results across each scenario, and stores summarized results in an Excel file. 
