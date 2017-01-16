@@ -1,8 +1,8 @@
-/******************************************************************************/
-/***	Scenario A (U influences stroke but not mortality).		    ***/
-/***	Modify the local parameters by changing the preamble file called    ***/
-/***	to modify the scenario.						    ***/
-/******************************************************************************/
+/**********************************************************************************/
+/***	Scenario $causalscenario (1=A, 2=B, 3=C)				***/
+/***	Modify the local parameters by changing the preamble file called	***/
+/***	to modify the scenario.							***/
+/**********************************************************************************/
 
 set more off
 clear
@@ -14,7 +14,7 @@ gen id = _n
 
 
 /*Step 1: Set parameters*/
-do race_slope_preamble_ScenarioA_2016Sept6_corr_per10000PY.do
+do race_slope_preamble_$causalscenario.do
 
 *specify prevalence of exposure
 local pexp = $pexp 	
