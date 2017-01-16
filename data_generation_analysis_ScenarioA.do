@@ -924,6 +924,7 @@ foreach x in 45to55 55to65 65to75 75to85 85to95 {
 	*stroke IRR and IRD for blacks vs. whites
 	qui stir exposure
 	scalar strokeIRR`x' = r(irr)
+	scalar strokelnIRR`x' = ln(r(irr))
 	*scalar strokelnIRR`x'_SE = sqrt((1/nstrokes`x'_exp1)+(1/nstrokes`x'_exp0)) //this isn't what I want--I want SE(IRR). also the code i wrote isn't working
 	scalar strokeIRR`x'_ub = r(ub_irr)
 	scalar strokeIRR`x'_lb = r(lb_irr)
@@ -937,7 +938,7 @@ foreach x in 45to55 55to65 65to75 75to85 85to95 {
 /******************************************/
 *pull n strokes per 5-year intervals
 *age 45, 50, 55, ..., 95
-foreach x in 45to55 55to65 65to75 75to85 85to95 {
+foreach x in 45to50 50to55 55to60 60to65 65to70 70to75 75to80 80to85 85to90 90to95 {
 	sum stroke`x' if exposure==0
 	scalar nstrokes`x'_exp0 = r(mean)*r(N)
 
