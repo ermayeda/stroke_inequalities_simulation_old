@@ -1,5 +1,5 @@
 /******************************************************************************/
-/***	Scenario 1/A (U influences stroke but not mortality).					***/
+/***	Scenario 1/A (U influences stroke but not mortality).					        ***/
 /******************************************************************************/
 
 /*Step 1: Set parameters*/
@@ -7,8 +7,9 @@
 *specify prevalence of exposure
 global pexp = 0.5 	
 
-*parameters for Sij 
+*parameters for death
 //effect of exposure on log hazard of death, based on US life tables for 1919-1921 birth cohort 
+*values for ages 0-45 are calculated directly from US life tables
 global g1_0to1 =	0.30
 global g1_1to5 = 	0.37
 global g1_5to10 = 	0.23
@@ -19,7 +20,7 @@ global g1_25to30 = 	0.79
 global g1_30to35 = 	0.78
 global g1_35to40 = 	0.77
 global g1_40to45 = 	0.74
-*values for ages 45+ identified from search loop 
+*values for ages 45+ identified from search loop because strokes begin occuring, stroke increase risk of death, and exposure increases stroke risk
 global g1_45to50 = 	.622
 global g1_50to55 = 	.58
 global g1_55to60 = 	.426
@@ -30,13 +31,11 @@ global g1_75to80 = 	-.052
 global g1_80to85 = 	-.132
 global g1_85to90 = 	-.204
 global g1_90to95 = 	-.264
-global g1_95to100 =	-.364 //*********edit out later
 
 *effects of covariates on mortality risk
-global g2 = 0		//log(HR) for effect of U on death 
+global g2 = 0		  //log(HR) for effect of U on death 
 global g3 = 0 		//log(HR) for interaction effect of exposure & U on death
 global g4 = ln(2)	//log(HR) for effect of stroke history on death
-global g5 = 0		//delete later
 
 *baseline hazard of death (whites), based on US life tables for 1919-1921 birth cohort
 global lambda_0to1 = 	0.0749
@@ -49,7 +48,7 @@ global lambda_25to30 = 	0.0056
 global lambda_30to35 = 	0.0062
 global lambda_35to40 = 	0.0068
 global lambda_40to45 = 	0.0078
-*values for ages 45+ identified from search loop 	
+*values for ages 45+ identified from search loop because strokes begin occuring, stroke increase risk of death
 global lambda_45to50 = 	.0102
 global lambda_50to55 = 	.0132
 global lambda_55to60 =	.0188
@@ -60,9 +59,8 @@ global lambda_75to80 = 	.0918
 global lambda_80to85 = 	.142
 global lambda_85to90 = 	.214
 global lambda_90to95 = 	.3
-global lambda_95to100 =	.49 //*********edit out later
 
-/*baseline hazard of stroke (exp=0 whites), based on Howard Ann Neurol 2011*/
+/*baseline hazard of stroke (exp=0 whites)*/
 *values identified from search loop 	
 global stk_lambda_exp0_45to50 = .00054
 global stk_lambda_exp0_50to55 = .00108
@@ -75,8 +73,8 @@ global stk_lambda_exp0_80to85 = .0118
 global stk_lambda_exp0_85to90 = .014
 global stk_lambda_exp0_90to95 = .0178
 
-/*baseline hazard of stroke (exp=1 blacks), based on Howard Ann Neurol 2011*/
-global stk_lambda_delta = 0.002 
+/*baseline hazard of stroke (exp=1 blacks)*/
+global stk_lambda_delta = 0.002 *age-constant incidence rate difference for exposure=1 vs. exposure=0
 global stk_lambda_exp1_45to50 = 	$stk_lambda_exp0_45to50 + $stk_lambda_delta
 global stk_lambda_exp1_50to55 = 	$stk_lambda_exp0_50to55 + $stk_lambda_delta
 global stk_lambda_exp1_55to60 =		$stk_lambda_exp0_55to60 + $stk_lambda_delta
@@ -90,10 +88,6 @@ global stk_lambda_exp1_90to95 = 	$stk_lambda_exp0_90to95 + $stk_lambda_delta
 
 *effects of covariates on stroke risk
 global b1 = ln(1.5)		//log (HR) for U on stroke
-global b2 = 0			//delete later
-global b3 = 0 			//delete later
-global b4 = 0 			//delete later
-global b5 = 0			//delete later
 
 *probability of death at stroke
 global pstrokedeath = 0.25 
