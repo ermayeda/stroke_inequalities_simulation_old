@@ -19,7 +19,7 @@ do race_slope_preamble_$causalscenario.do
 *specify prevalence of exposure
 local pexp = $pexp 	
 
-*parameters for Sij 
+*parameters for mortality  
 //effect of exposure on log hazard of death, based on US life tables for 1919-1921 birth cohort 
 local g1_0to1 =		$g1_0to1
 local g1_1to5 = 	$g1_1to5
@@ -41,13 +41,11 @@ local g1_75to80 = 	$g1_75to80
 local g1_80to85 = 	$g1_80to85
 local g1_85to90 = 	$g1_85to90
 local g1_90to95 = 	$g1_90to95
-local g1_95to100 =	$g1_95to100 
 
 *effects of covariates on mortality risk
 local g2 = $g2 //log(HR) for effect of U on death 
 local g3 = $g3 //log(HR) for interaction effect of exposure & U on death
-local g4 = $g4 //log(HR) for effect of stroke on death	
-local g5 = $g5 //delete later	
+local g4 = $g4 //log(HR) for effect of stroke on death		
 
 *baseline hazard of death (whites), based on US life tables for 1919-1921 birth cohort
 local lambda_0to1 = 	$lambda_0to1
@@ -70,9 +68,9 @@ local lambda_75to80 = 	$lambda_75to80
 local lambda_80to85 = 	$lambda_80to85
 local lambda_85to90 = 	$lambda_85to90
 local lambda_90to95 = 	$lambda_90to95
-local lambda_95to100 =	$lambda_95to100
 
-*baseline hazard of stroke (exp=0 whites), based on Howard Ann Neurol 2011
+/*baseline hazard of stroke (exp=0 whites), based on race- and age-specific stroke incidence rates in REGARDS 
+(rates provided by Dr. George Howard in Dec 2016 that are updes of rates published in Howard Ann Neurol 2011)*/
 local stk_lambda_exp0_45to50 = 	$stk_lambda_exp0_45to50
 local stk_lambda_exp0_50to55 = 	$stk_lambda_exp0_50to55
 local stk_lambda_exp0_55to60 =	$stk_lambda_exp0_55to60
@@ -84,7 +82,8 @@ local stk_lambda_exp0_80to85 = 	$stk_lambda_exp0_80to85
 local stk_lambda_exp0_85to90 = 	$stk_lambda_exp0_85to90
 local stk_lambda_exp0_90to95 = 	$stk_lambda_exp0_90to95
 
-*baseline hazard of stroke (exp=1 blacks), based on Howard Ann Neurol 2011
+/*baseline hazard of stroke (exp=0 whites), based on race- and age-specific stroke incidence rates in REGARDS 
+(rates provided by Dr. George Howard in Dec 2016 that are updes of rates published in Howard Ann Neurol 2011)*/
 local stk_lambda_exp1_45to50 = $stk_lambda_exp1_45to50 	 
 local stk_lambda_exp1_50to55 = $stk_lambda_exp1_50to55 	
 local stk_lambda_exp1_55to60 = $stk_lambda_exp1_55to60 	
@@ -96,12 +95,8 @@ local stk_lambda_exp1_80to85 = $stk_lambda_exp1_80to85
 local stk_lambda_exp1_85to90 = $stk_lambda_exp1_85to90 	
 local stk_lambda_exp1_90to95 = $stk_lambda_exp1_90to95 	
 
-*parameters for stroke risk
+*parameter for stroke risk
 local b1 = $b1 			//log (HR) for U on stroke
-local b2 = $b2 			//delete later
-local b3 = $b3 			//delete later
-local b4 = $b3 			//delete later
-local b5 = $b4 			//delete later
 
 *probability of death at stroke
 local pstrokedeath = $pstrokedeath 
@@ -117,7 +112,7 @@ gen exposure = runiform()<`pexp'
 gen U = rnormal(0,1)
 
 
-/*Step 4: Generate survival time for each person and strokes for people alive
+/*Step 4: Generate survival time (Tij) for each person and strokes for people alive
 at each interval. 
 a. Each person's underlying time to death is generated for each age interval, 
 conditional on the past provided the person has not died in a previous interval, 
@@ -132,42 +127,43 @@ h(tij|x) = lambda*exp(g1*exposurei + g2*Ui + g3*exposurei*Ui + g4*stroke_history
 A person’s survival time for a given time interval at risk is generated using 
 the inverse cumulative hazard function transformation formula described by 
 Bender et al. (Stat Med 2011)
-b. Stroke code is adapted for survival time code.*/
+b. Stroke code is adapted from survival time code. The effect of exposure on stroke
+risk is set to a constant incidence rate difference (see preamble files): 
+stk_lambda_exp1_agejtoagej+1 = stk_lambda_exp0_agejtoagej+1 + stk_lambda_deltastk_lambda_delta*/
 
 *ia. Generate uniform random variable for generating survival time
-gen U_0to1 = runiform()
-gen U_1to5 = runiform()
-gen U_5to10 = runiform()
-gen U_10to15 = runiform()
-gen U_15to20 = runiform()
-gen U_20to25 = runiform()
-gen U_25to30 = runiform()
-gen U_30to35 = runiform()
-gen U_35to40 = runiform()
-gen U_40to45 = runiform()
-gen U_45to50 = runiform()
-gen U_50to55 = runiform()
-gen U_55to60 = runiform()
-gen U_60to65 = runiform()
-gen U_65to70 = runiform()
-gen U_70to75 = runiform()
-gen U_75to80 = runiform()
-gen U_80to85 = runiform()
-gen U_85to90 = runiform()
-gen U_90to95 = runiform()
-gen U_95to100 = runiform()
+gen RV_0to1 = runiform()
+gen RV_1to5 = runiform()
+gen RV_5to10 = runiform()
+gen RV_10to15 = runiform()
+gen RV_15to20 = runiform()
+gen RV_20to25 = runiform()
+gen RV_25to30 = runiform()
+gen RV_30to35 = runiform()
+gen RV_35to40 = runiform()
+gen RV_40to45 = runiform()
+gen RV_45to50 = runiform()
+gen RV_50to55 = runiform()
+gen RV_55to60 = runiform()
+gen RV_60to65 = runiform()
+gen RV_65to70 = runiform()
+gen RV_70to75 = runiform()
+gen RV_75to80 = runiform()
+gen RV_80to85 = runiform()
+gen RV_85to90 = runiform()
+gen RV_90to95 = runiform()
 
 *ib. Generate uniform random variable for generating stroke time
-gen U2_45to50 = runiform()
-gen U2_50to55 = runiform()
-gen U2_55to60 = runiform()
-gen U2_60to65 = runiform()
-gen U2_65to70 = runiform()
-gen U2_70to75 = runiform()
-gen U2_75to80 = runiform()
-gen U2_80to85 = runiform()
-gen U2_85to90 = runiform()
-gen U2_90to95 = runiform()
+gen RV2_45to50 = runiform()
+gen RV2_50to55 = runiform()
+gen RV2_55to60 = runiform()
+gen RV2_60to65 = runiform()
+gen RV2_65to70 = runiform()
+gen RV2_70to75 = runiform()
+gen RV2_75to80 = runiform()
+gen RV2_80to85 = runiform()
+gen RV2_85to90 = runiform()
+gen RV2_90to95 = runiform()
 
 
 *ii. Generate survival time and stroke time for each interval
@@ -178,8 +174,8 @@ gen strokeage = .
 /***Ages 0-45: no strokes, so only need to generate survival***/
 /*Interval 0-1*/
 *Generate survival time from time 0
-gen survtime0to1 = -ln(U_0to1)/(`lambda_0to1'*exp(`g1_0to1'*exposure +`g2'*U ///
-			+`g3'*exposure*U +`g4'*0 +`g5'*0))
+gen survtime0to1 = -ln(RV_0to1)/(`lambda_0to1'*exp(`g1_0to1'*exposure +`g2'*U ///
+			+`g3'*exposure*U +`g4'*0))
 *Generate death indicator for interval 0-1 
 gen death0to1 = 0
 replace death0to1 = 1 if (survtime0to1 < 1) 
@@ -190,8 +186,8 @@ gen death1 = death0to1
 
 /*Interval 1-5*/
 *Generate survival time from time 1
-gen survtime1to5 = -ln(U_1to5)/(`lambda_1to5'*exp(`g1_1to5'*exposure +`g2'*U ///
-			+`g3'*exposure*U +`g4'*0 +`g5'*0)) ///
+gen survtime1to5 = -ln(RV_1to5)/(`lambda_1to5'*exp(`g1_1to5'*exposure +`g2'*U ///
+			+`g3'*exposure*U +`g4'*0)) ///
 				if (death0to1==0) 
 *Generate death indicator for interval 1-5 
 gen death1to5 = 0 if (death1==0)
@@ -204,8 +200,8 @@ replace death5 = 1 if survage < 5
 
 /*Interval 5-10*/
 *Generate survival time from time 2
-gen survtime5to10 = -ln(U_5to10)/(`lambda_5to10'*exp(`g1_5to10'*exposure +`g2'*U ///
-			+`g3'*exposure*U +`g4'*0 +`g5'*0)) ///
+gen survtime5to10 = -ln(RV_5to10)/(`lambda_5to10'*exp(`g1_5to10'*exposure +`g2'*U ///
+			+`g3'*exposure*U +`g4'*0)) ///
 				if (death5==0)
 *Generate death indicator for interval 5-10 
 gen death5to10 = 0 if (death5==0)
@@ -218,8 +214,8 @@ replace death10 = 1 if survage < 10
 
 /*Interval 10-15*/
 *Generate survival time from time 3
-gen survtime10to15 = -ln(U_10to15)/(`lambda_10to15'*exp(`g1_10to15'*exposure +`g2'*U ///
-			+`g3'*exposure*U +`g4'*0 +`g5'*0)) ///
+gen survtime10to15 = -ln(RV_10to15)/(`lambda_10to15'*exp(`g1_10to15'*exposure +`g2'*U ///
+			+`g3'*exposure*U +`g4'*0)) ///
 				if (death10==0)
 *Generate death indicator for interval 10-15
 gen death10to15 = 0 if (death10==0)
@@ -231,8 +227,8 @@ replace death15 = 1 if survage < 15
 
 /*Interval 15-20*/
 *Generate survival time from time 4
-gen survtime15to20 = -ln(U_15to20)/(`lambda_15to20'*exp(`g1_15to20'*exposure +`g2'*U ///
-			+`g3'*exposure*U +`g4'*0 +`g5'*0)) ///
+gen survtime15to20 = -ln(RV_15to20)/(`lambda_15to20'*exp(`g1_15to20'*exposure +`g2'*U ///
+			+`g3'*exposure*U +`g4'*0)) ///
 				if (death15==0)
 *Generate death indicator for interval 15-20 
 gen death15to20 = 0 if (death15==0)
@@ -245,8 +241,8 @@ replace death20 = 1 if survage < 20
 
 /*Interval 20-25*/
 *Generate survival time from time 5
-gen survtime20to25 = -ln(U_20to25)/(`lambda_20to25'*exp(`g1_20to25'*exposure +`g2'*U ///
-			+`g3'*exposure*U +`g4'*0 +`g5'*0)) ///
+gen survtime20to25 = -ln(RV_20to25)/(`lambda_20to25'*exp(`g1_20to25'*exposure +`g2'*U ///
+			+`g3'*exposure*U +`g4'*0)) ///
 				if (death20==0) 
 *Generate death indicator for interval 20-25 
 gen death20to25 = 0 if (death20==0)
@@ -259,8 +255,8 @@ replace death25 = 1 if survage < 25
 
 /*Interval 25-30*/
 *Generate survival time from time 6
-gen survtime25to30 = -ln(U_25to30)/(`lambda_25to30'*exp(`g1_25to30'*exposure +`g2'*U ///
-			+`g3'*exposure*U +`g4'*0 +`g5'*0)) ///
+gen survtime25to30 = -ln(RV_25to30)/(`lambda_25to30'*exp(`g1_25to30'*exposure +`g2'*U ///
+			+`g3'*exposure*U +`g4'*0)) ///
 				if (death25==0)
 *Generate death indicator for interval 25-30 
 gen death25to30 = 0 if (death25==0)
@@ -273,8 +269,8 @@ replace death30 = 1 if survage < 30
 
 /*Interval 30-35*/
 *Generate survival time from time 7
-gen survtime30to35 = -ln(U_30to35)/(`lambda_30to35'*exp(`g1_30to35'*exposure +`g2'*U ///
-			+`g3'*exposure*U +`g4'*0 +`g5'*0)) ///
+gen survtime30to35 = -ln(RV_30to35)/(`lambda_30to35'*exp(`g1_30to35'*exposure +`g2'*U ///
+			+`g3'*exposure*U +`g4'*0)) ///
 				if (death30==0)
 *Generate death indicator for interval 30-35 
 gen death30to35 = 0 if (death30==0)
@@ -287,8 +283,8 @@ replace death35 = 1 if survage < 35
 
 /*Interval 35-40*/
 *Generate survival time from time 8
-gen survtime35to40 = -ln(U_35to40)/(`lambda_35to40'*exp(`g1_35to40'*exposure +`g2'*U ///
-			+`g3'*exposure*U +`g4'*0 +`g5'*0)) ///
+gen survtime35to40 = -ln(RV_35to40)/(`lambda_35to40'*exp(`g1_35to40'*exposure +`g2'*U ///
+			+`g3'*exposure*U +`g4'*0)) ///
 				if (death35==0)
 *Generate death indicator for interval 35-40
 gen death35to40 = 0 if (death35==0)
@@ -301,8 +297,8 @@ replace death40 = 1 if survage < 40
 
 /*Interval 40-45*/
 *Generate survival time from time 9
-gen survtime40to45 = -ln(U_40to45)/(`lambda_40to45'*exp(`g1_40to45'*exposure +`g2'*U ///
-			+`g3'*exposure*U +`g4'*0 +`g5'*0)) ///
+gen survtime40to45 = -ln(RV_40to45)/(`lambda_40to45'*exp(`g1_40to45'*exposure +`g2'*U ///
+			+`g3'*exposure*U +`g4'*0)) ///
 				if (death40==0)
 *Generate death indicator for interval 40-45
 gen death40to45 = 0 if (death40==0)
@@ -313,16 +309,20 @@ gen death45 = 0
 replace death45 = 1 if survage < 45
 
 
-/***Starting at age 45--people are at risk of stroke, and prevalent stroke
-increases mortality risk, so we need to start iteratively generating survival 
-times and strokes***/
+/***Starting at age 45--people are at risk of stroke, and prevalent stroke 
+increases mortality risk, so we need to start iteratively generating deaths and strokes.
+Prevalent stroke for age interval age j to age j+1 is a stroke that occured prior to 
+age j. Since strokes first occurs starting at age 45, there are no prevalent strokes at
+age 45. Thus, the effect of prevalent stroke on mortality is set to 0 for this interval:
+	survtime45to50: `g4'*0
+	For subsequent age intervals: `g4'*stroke_history***/
 
 
 /*Interval 45-50*/
 ***a. Survival
 *Generate survival time from time 10
-gen survtime45to50 = -ln(U_45to50)/(`lambda_45to50'*exp(`g1_45to50'*exposure +`g2'*U ///
-			+`g3'*exposure*U +`g4'*0 +`g5'*0)) ///
+gen survtime45to50 = -ln(RV_45to50)/(`lambda_45to50'*exp(`g1_45to50'*exposure +`g2'*U ///
+			+`g3'*exposure*U +`g4'*0)) ///
 				if (death45==0)
 *Generate death indicator for interval 45-50
 gen death45to50 = 0 if (death45==0)
@@ -334,10 +334,10 @@ replace death50 = 1 if survage < 50
 
 ***b. Stroke
 *Generate stroke time from time 10 exp==0
-gen stroketime45to50 = -ln(U2_45to50)/(`stk_lambda_exp0_45to50'*exp(`b1'*U)) ///
+gen stroketime45to50 = -ln(RV2_45to50)/(`stk_lambda_exp0_45to50'*exp(`b1'*U)) ///
 				if (exp==0 & death45==0)
 *Generate stroke time from time 10 exp==1
-replace stroketime45to50 = -ln(U2_45to50)/(`stk_lambda_exp1_45to50'*exp(`b1'*U)) ///
+replace stroketime45to50 = -ln(RV2_45to50)/(`stk_lambda_exp1_45to50'*exp(`b1'*U)) ///
 				if (exp==1 & death45==0)
 *Generate stroke indicator for interval 45-50
 gen stroke45to50 = 0 if (death45==0)
@@ -363,8 +363,8 @@ replace strokedeath50 = 1 if (strokedeath45to50==1)
 /*Interval 50-55*/
 ***a. Survival
 *Generate survival time from time 11
-gen survtime50to55 = -ln(U_50to55)/(`lambda_50to55'*exp(`g1_50to55'*exposure +`g2'*U ///
-			+`g3'*exposure*U +`g4'*stroke_history +`g5'*0)) ///
+gen survtime50to55 = -ln(RV_50to55)/(`lambda_50to55'*exp(`g1_50to55'*exposure +`g2'*U ///
+			+`g3'*exposure*U +`g4'*stroke_history)) ///
 				if (death50==0)
 *Generate death indicator for interval 50-55
 gen death50to55 = 0 if (death50==0)
@@ -377,10 +377,10 @@ replace death55 = 1 if survage < 55
 ***b. Stroke
 /*Interval 50-55*/
 *Generate stroke time from time 11 exp==0
-gen stroketime50to55 = -ln(U2_50to55)/(`stk_lambda_exp0_50to55'*exp(`b1'*U)) ///
+gen stroketime50to55 = -ln(RV2_50to55)/(`stk_lambda_exp0_50to55'*exp(`b1'*U)) ///
 				if (exp==0 & death50==0 & stroke50==0)
 *Generate stroke time from time 11 exp==1
-replace stroketime50to55 = -ln(U2_50to55)/(`stk_lambda_exp1_50to55'*exp(`b1'*U)) ///
+replace stroketime50to55 = -ln(RV2_50to55)/(`stk_lambda_exp1_50to55'*exp(`b1'*U)) ///
 				if (exp==1 & death50==0 & stroke50==0)
 *Generate stroke indicator for interval 50-55
 gen stroke50to55 = 0 if (death50==0 & stroke50==0)
@@ -405,8 +405,8 @@ replace strokedeath55 = 1 if (strokedeath45to50==1 | strokedeath50to55==1)
 /*Interval 55-60*/
 ***a. Survival
 *Generate survival time from time 12
-gen survtime55to60 = -ln(U_55to60)/(`lambda_55to60'*exp(`g1_55to60'*exposure +`g2'*U ///
-			+`g3'*exposure*U +`g4'*stroke_history +`g5'*0)) ///
+gen survtime55to60 = -ln(RV_55to60)/(`lambda_55to60'*exp(`g1_55to60'*exposure +`g2'*U ///
+			+`g3'*exposure*U +`g4'*stroke_history)) ///
 				if (death55==0)
 *Generate death indicator for interval 55-60
 gen death55to60 = 0 if (death55==0)
@@ -418,10 +418,10 @@ replace death60 = 1 if survage < 60
 
 ***b. Stroke
 *Generate stroke time from time 12 exp==0
-gen stroketime55to60 = -ln(U2_55to60)/(`stk_lambda_exp0_55to60'*exp(`b1'*U)) ///
+gen stroketime55to60 = -ln(RV2_55to60)/(`stk_lambda_exp0_55to60'*exp(`b1'*U)) ///
 				if (exp==0 & death55==0 & stroke55==0)
 *Generate stroke time from time 12 exp==1
-replace stroketime55to60 = -ln(U2_55to60)/(`stk_lambda_exp1_55to60'*exp(`b1'*U)) ///
+replace stroketime55to60 = -ln(RV2_55to60)/(`stk_lambda_exp1_55to60'*exp(`b1'*U)) ///
 				if (exp==1 & death55==0 & stroke55==0)				
 *Generate stroke indicator for interval 55-60
 gen stroke55to60 = 0 if (death55==0 & stroke55==0)
@@ -446,8 +446,8 @@ replace strokedeath60 = 1 if (strokedeath45to50==1 | strokedeath50to55==1 | stro
 /*Interval 60-65*/
 ***a. Survival
 *Generate survival time from time 13
-gen survtime60to65 = -ln(U_60to65)/(`lambda_60to65'*exp(`g1_60to65'*exposure +`g2'*U ///
-			+`g3'*exposure*U +`g4'*stroke_history +`g5'*0)) ///
+gen survtime60to65 = -ln(RV_60to65)/(`lambda_60to65'*exp(`g1_60to65'*exposure +`g2'*U ///
+			+`g3'*exposure*U +`g4'*stroke_history)) ///
 				if (death60==0)
 *Generate death indicator for interval 60-65
 gen death60to65 = 0 if (death60==0)
@@ -459,10 +459,10 @@ replace death65 = 1 if survage < 65
 
 ***b. Stroke
 *Generate stroke time from time 13 exp==0
-gen stroketime60to65 = -ln(U2_60to65)/(`stk_lambda_exp0_60to65'*exp(`b1'*U)) ///
+gen stroketime60to65 = -ln(RV2_60to65)/(`stk_lambda_exp0_60to65'*exp(`b1'*U)) ///
 				if (exp==0 & death60==0 & stroke60==0)
 *Generate stroke time from time 13 exp==1
-replace stroketime60to65 = -ln(U2_60to65)/(`stk_lambda_exp1_60to65'*exp(`b1'*U)) ///
+replace stroketime60to65 = -ln(RV2_60to65)/(`stk_lambda_exp1_60to65'*exp(`b1'*U)) ///
 				if (exp==1 & death60==0 & stroke60==0)
 *Generate stroke indicator for interval 60-65
 gen stroke60to65 = 0 if (death60==0 & stroke60==0)
@@ -488,8 +488,8 @@ replace strokedeath65 = 1 if (strokedeath45to50==1 | strokedeath50to55==1 | stro
 /*Interval 65-70*/
 ***a. Survival
 *Generate survival time from time 14
-gen survtime65to70 = -ln(U_65to70)/(`lambda_65to70'*exp(`g1_65to70'*exposure +`g2'*U ///
-			+`g3'*exposure*U +`g4'*stroke_history +`g5'*0)) ///
+gen survtime65to70 = -ln(RV_65to70)/(`lambda_65to70'*exp(`g1_65to70'*exposure +`g2'*U ///
+			+`g3'*exposure*U +`g4'*stroke_history)) ///
 				if (death65==0)
 *Generate death indicator for interval 65-70
 gen death65to70 = 0 if (death65==0)
@@ -501,10 +501,10 @@ replace death70 = 1 if survage < 70
 
 ***b. Stroke
 *Generate stroke time from time 14 exp==0
-gen stroketime65to70 = -ln(U2_65to70)/(`stk_lambda_exp0_65to70'*exp(`b1'*U)) ///
+gen stroketime65to70 = -ln(RV2_65to70)/(`stk_lambda_exp0_65to70'*exp(`b1'*U)) ///
 				if (exp==0 & death65==0 & stroke65==0)
 *Generate stroke time from time 14 exp==1
-replace stroketime65to70 = -ln(U2_65to70)/(`stk_lambda_exp1_65to70'*exp(`b1'*U)) ///
+replace stroketime65to70 = -ln(RV2_65to70)/(`stk_lambda_exp1_65to70'*exp(`b1'*U)) ///
 				if (exp==1 & death65==0 & stroke65==0)
 *Generate stroke indicator for interval 65-70
 gen stroke65to70 = 0 if (death65==0 & stroke65==0)
@@ -530,8 +530,8 @@ replace strokedeath70 = 1 if (strokedeath45to50==1 | strokedeath50to55==1 | stro
 /*Interval 70-75*/
 ***a. Survival
 *Generate survival time from time 15
-gen survtime70to75 = -ln(U_70to75)/(`lambda_70to75'*exp(`g1_70to75'*exposure +`g2'*U ///
-			+`g3'*exposure*U +`g4'*stroke_history +`g5'*0)) ///
+gen survtime70to75 = -ln(RV_70to75)/(`lambda_70to75'*exp(`g1_70to75'*exposure +`g2'*U ///
+			+`g3'*exposure*U +`g4'*stroke_history)) ///
 				if (death70==0)
 *Generate death indicator for interval 70-75
 gen death70to75 = 0 if (death70==0)
@@ -543,10 +543,10 @@ replace death75 = 1 if survage < 75
 
 ***b. Stroke
 *Generate stroke time from time 15 exp==0
-gen stroketime70to75 = -ln(U2_70to75)/(`stk_lambda_exp0_70to75'*exp(`b1'*U)) ///
+gen stroketime70to75 = -ln(RV2_70to75)/(`stk_lambda_exp0_70to75'*exp(`b1'*U)) ///
 				if (exp==0 & death70==0 & stroke70==0)
 *Generate stroke time from time 15 exp==1
-replace stroketime70to75 = -ln(U2_70to75)/(`stk_lambda_exp1_70to75'*exp(`b1'*U)) ///
+replace stroketime70to75 = -ln(RV2_70to75)/(`stk_lambda_exp1_70to75'*exp(`b1'*U)) ///
 				if (exp==1 & death70==0 & stroke70==0)
 *Generate stroke indicator for interval 70-75
 gen stroke70to75 = 0 if (death70==0 & stroke70==0)
@@ -572,8 +572,8 @@ replace strokedeath75 = 1 if (strokedeath45to50==1 | strokedeath50to55==1 | stro
 /*Interval 75-80*/
 ***a. Survival
 *Generate survival time from time 16
-gen survtime75to80 = -ln(U_75to80)/(`lambda_75to80'*exp(`g1_75to80'*exposure +`g2'*U ///
-			+`g3'*exposure*U +`g4'*stroke_history +`g5'*0)) ///
+gen survtime75to80 = -ln(RV_75to80)/(`lambda_75to80'*exp(`g1_75to80'*exposure +`g2'*U ///
+			+`g3'*exposure*U +`g4'*stroke_history)) ///
 				if (death75==0)
 *Generate death indicator for interval 75-80
 gen death75to80 = 0 if (death75==0)
@@ -585,10 +585,10 @@ replace death80 = 1 if survage < 80
 
 ***b. Stroke
 *Generate stroke time from time 16 exp==0
-gen stroketime75to80 = -ln(U2_75to80)/(`stk_lambda_exp0_75to80'*exp(`b1'*U)) ///
+gen stroketime75to80 = -ln(RV2_75to80)/(`stk_lambda_exp0_75to80'*exp(`b1'*U)) ///
 				if (exp==0 & death75==0 & stroke75==0)
 *Generate stroke time from time 16 exp==1
-replace stroketime75to80 = -ln(U2_75to80)/(`stk_lambda_exp1_75to80'*exp(`b1'*U)) ///
+replace stroketime75to80 = -ln(RV2_75to80)/(`stk_lambda_exp1_75to80'*exp(`b1'*U)) ///
 				if (exp==1 & death75==0 & stroke75==0)
 *Generate stroke indicator for interval 75-80
 gen stroke75to80 = 0 if (death75==0 & stroke75==0)	
@@ -614,8 +614,8 @@ replace strokedeath80 = 1 if (strokedeath45to50==1 | strokedeath50to55==1 | stro
 /*Interval 80-85*/
 ***a. Survival
 *Generate survival time from time 17
-gen survtime80to85 = -ln(U_80to85)/(`lambda_80to85'*exp(`g1_80to85'*exposure +`g2'*U ///
-			+`g3'*exposure*U +`g4'*stroke_history +`g5'*0)) ///
+gen survtime80to85 = -ln(RV_80to85)/(`lambda_80to85'*exp(`g1_80to85'*exposure +`g2'*U ///
+			+`g3'*exposure*U +`g4'*stroke_history)) ///
 				if (death80==0)
 *Generate death indicator for interval 80-85
 gen death80to85 = 0 if (death80==0)
@@ -627,10 +627,10 @@ replace death85 = 1 if survage < 85
 
 ***b. Stroke
 *Generate stroke time from time 17 exp==0
-gen stroketime80to85 = -ln(U2_80to85)/(`stk_lambda_exp0_80to85'*exp(`b1'*U)) ///
+gen stroketime80to85 = -ln(RV2_80to85)/(`stk_lambda_exp0_80to85'*exp(`b1'*U)) ///
 				if (exp==0 & death80==0 & stroke80==0)
 *Generate stroke time from time 17 exp==1
-replace stroketime80to85 = -ln(U2_80to85)/(`stk_lambda_exp1_80to85'*exp(`b1'*U)) ///
+replace stroketime80to85 = -ln(RV2_80to85)/(`stk_lambda_exp1_80to85'*exp(`b1'*U)) ///
 				if (exp==1 & death80==0 & stroke80==0)
 *Generate stroke indicator for interval 80-85
 gen stroke80to85 = 0 if (death80==0 & stroke80==0)
@@ -657,8 +657,8 @@ replace strokedeath85 = 1 if (strokedeath45to50==1 | strokedeath50to55==1 | stro
 /*Interval 85-90*/
 ***a. Survival
 *Generate survival time from time 18
-gen survtime85to90 = -ln(U_85to90)/(`lambda_85to90'*exp(`g1_85to90'*exposure +`g2'*U ///
-			+`g3'*exposure*U +`g4'*stroke_history +`g5'*0)) ///
+gen survtime85to90 = -ln(RV_85to90)/(`lambda_85to90'*exp(`g1_85to90'*exposure +`g2'*U ///
+			+`g3'*exposure*U +`g4'*stroke_history)) ///
 				if (death85==0)
 *Generate death indicator for interval 85-90
 gen death85to90 = 0 if (death85==0)
@@ -670,10 +670,10 @@ replace death90 = 1 if survage < 90
 
 ***b. Stroke
 *Generate stroke time from time 18 exp==0
-gen stroketime85to90 = -ln(U2_85to90)/(`stk_lambda_exp0_85to90'*exp(`b1'*U)) ///
+gen stroketime85to90 = -ln(RV2_85to90)/(`stk_lambda_exp0_85to90'*exp(`b1'*U)) ///
 				if (exp==0 & death85==0 & stroke85==0)
 *Generate stroke time from time 18 exp==1
-replace stroketime85to90 = -ln(U2_85to90)/(`stk_lambda_exp1_85to90'*exp(`b1'*U)) ///
+replace stroketime85to90 = -ln(RV2_85to90)/(`stk_lambda_exp1_85to90'*exp(`b1'*U)) ///
 				if (exp==1 & death85==0 & stroke85==0)
 *Generate stroke indicator for interval 85-90
 gen stroke85to90 = 0 if (death85==0 & stroke85==0)
@@ -700,8 +700,8 @@ replace strokedeath90 = 1 if (strokedeath45to50==1 | strokedeath50to55==1 | stro
 /*Interval 90-95*/
 ***a. Survival
 *Generate survival time from time 19
-gen survtime90to95 = -ln(U_90to95)/(`lambda_90to95'*exp(`g1_90to95'*exposure +`g2'*U ///
-			+`g3'*exposure*U +`g4'*stroke_history +`g5'*0)) ///
+gen survtime90to95 = -ln(RV_90to95)/(`lambda_90to95'*exp(`g1_90to95'*exposure +`g2'*U ///
+			+`g3'*exposure*U +`g4'*stroke_history)) ///
 				if (death90==0)
 *Generate death indicator for interval 90-95
 gen death90to95 = 0 if (death90==0)
@@ -714,10 +714,10 @@ replace death95 = 1 if survage < 95
 ***b. Stroke
 /*Interval 90-95*/
 *Generate stroke time from time 19 exp==0
-gen stroketime90to95 = -ln(U2_90to95)/(`stk_lambda_exp0_90to95'*exp(`b1'*U)) ///
+gen stroketime90to95 = -ln(RV2_90to95)/(`stk_lambda_exp0_90to95'*exp(`b1'*U)) ///
 				if (exp==0 & death90==0 & stroke90==0)
 *Generate stroke time from time 19 exp==1
-replace stroketime90to95 = -ln(U2_90to95)/(`stk_lambda_exp1_90to95'*exp(`b1'*U)) ///
+replace stroketime90to95 = -ln(RV2_90to95)/(`stk_lambda_exp1_90to95'*exp(`b1'*U)) ///
 				if (exp==1 & death90==0 & stroke90==0)
 *Generate stroke indicator for interval 90-95
 gen stroke90to95 = 0 if (death90==0 & stroke90==0)
@@ -740,28 +740,14 @@ replace strokedeath95 = 1 if (strokedeath45to50==1 | strokedeath50to55==1 | stro
 	strokedeath60to65==1 | strokedeath65to70==1 | strokedeath70to75==1 | strokedeath75to80==1 | ///
 	strokedeath80to85==1 | strokedeath85to90==1 | strokedeath90to95==1)
 	
-
-/*Interval 95-100*/
-***a. Survival
-*Generate survival time from time 20
-gen survtime95to100 = -ln(U_95to100)/(`lambda_95to100'*exp(`g1_95to100'*exposure +`g2'*U ///
-			+`g3'*exposure*U +`g4'*stroke_history +`g5'*0)) ///
-				if (death95==0)
-*Generate death indicator for interval 95-100
-gen death95to100 = 0 if (death95==0)
-replace death95to100 = 1 if (survtime95to100 < 5)
-replace survage = 95 + survtime95to100 if (survtime95to100!=.)
-*Generate indicator for death before age 95
-gen death100 = 0
-replace death100 = 1 if survage < 100
+	
+/*Stroke and death not generated for ages 95+*/
 
 *everyone dies
 gen death = 1
 
-*top code survage at 100
-*replace survage = 100 if survage > 100
-
-***b. Stroke: Not generated for ages 95+
+*top code survage at 95
+*replace survage = 95 if survage > 95
 
 
 *iv. Generate variables for stroke and stroke death between ages 45 to 95
@@ -826,25 +812,21 @@ replace strokeage85to95_contributor = 0 if (strokeage !=. & strokeage<85)
 gen stroke85to95 = 0
 replace stroke85to95 = 1 if (stroke85to90==1 | stroke90to95==1)
 
-
 /**************************************************************/
 
-/******************************************************************************/
-/***	End data generation													***/
-/******************************************************************************/
+/**********************************************************************************/
+/***	End data generation							***/
+/**********************************************************************************/
 
 
-/******************************************************************************/
+/**********************************************************************************/
 /***	Select a sample of observations still alive at start of study		***/
-/******************************************************************************/
-*drop if death_prestudy==1
-*sample 2500, count 
+/**********************************************************************************/
 
 
-
-/******************************************************************************/
+/**********************************************************************************/
 /***	MODELS																***/
-/******************************************************************************/
+/**********************************************************************************/
 
 ******************************************/
 *pull N
@@ -857,7 +839,7 @@ scalar N_exp0 = r(N) - r(mean)*r(N)
 /******************************************/
 
 /******************************************/
-*pull percentage of deaths at start and end of stroke f/u
+*pull proportion of deaths at start and end of stroke f/u
 *age 45, 50, 55, ..., 95
 foreach x in 45 50 55 60 65 70 75 80 85 90 95 {
 	summarize death`x', meanonly
@@ -889,6 +871,7 @@ scalar p_stroke_exp0 = r(mean)
 
 /******************************************/
 *distribution of U among people at risk for stroke in each age group at birth and in 5-year intervals starting at age 45
+*U and race should be independent at birth
 *birth
 qui sum U if (exposure==1)
 scalar meanUatrisk0_exp1= r(mean)
@@ -925,11 +908,11 @@ foreach x in 45to55 55to65 65to75 75to85 85to95 {
 	qui stir exposure
 	scalar strokeIRR`x' = r(irr)
 	scalar strokelnIRR`x' = ln(r(irr))
-	*scalar strokelnIRR`x'_SE = sqrt((1/nstrokes`x'_exp1)+(1/nstrokes`x'_exp0)) //this isn't what I want--I want SE(IRR). also the code i wrote isn't working
+	*scalar strokelnIRR`x'_SE = sqrt((1/nstrokes`x'_exp1)+(1/nstrokes`x'_exp0)) 
 	scalar strokeIRR`x'_ub = r(ub_irr)
 	scalar strokeIRR`x'_lb = r(lb_irr)
 	scalar strokeIRD`x' = r(ird)*10000
-	scalar strokeIRD`x'_SE = sqrt((nstrokes`x'_exp1/((ptime`x'_exp1)^2))+(1/nstrokes`x'_exp0/((ptime`x'_exp0)^2)))*10000 //can I simply multiply the SE(IRD) by the PY?
+	scalar strokeIRD`x'_SE = sqrt((nstrokes`x'_exp1/((ptime`x'_exp1)^2))+(1/nstrokes`x'_exp0/((ptime`x'_exp0)^2)))*10000 
 	scalar strokeIRD`x'_ub = r(ub_ird)*10000
 	scalar strokeIRD`x'_lb = r(lb_ird)*10000
 }
