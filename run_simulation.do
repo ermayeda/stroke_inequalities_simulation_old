@@ -140,7 +140,7 @@ gen p_alive95_exp0 = 1 - p_death95_exp0
 gen p_alive95_exp1 = 1 - p_death95_exp1
 
 
-*pstroke each age group
+*pstroke each age group (not included in paper results-checking work)
 gen p_stroke45to50_exp0 = nstrokes45to50_exp0/(p_alive45_exp0*`N')
 gen p_stroke50to55_exp0 = nstrokes50to55_exp0/(p_alive50_exp0*`N')
 gen p_stroke55to60_exp0 = nstrokes55to60_exp0/(p_alive55_exp0*`N')
@@ -275,20 +275,6 @@ scalar empSE_`x' = round(r(sd),0.001)
 }
 
 
-/*95% CI coverage 
-gen coverage_strokeIRR45to55 = (strokeIRR45to55_ub > 1 & strokeIRR45to55_lb < 1)
-gen coverage_strokeIRR55to65 = (strokeIRR55to65_ub > 1 & strokeIRR55to65_lb < 1)
-gen coverage_strokeIRR65to75 = (strokeIRR65to75_ub > 1 & strokeIRR65to75_lb < 1)
-gen coverage_strokeIRR75to85 = (strokeIRR75to85_ub > 1 & strokeIRR75to85_lb < 1)
-gen coverage_strokeIRR85to95 = (strokeIRR85to95_ub > 1 & strokeIRR85to95_lb < 1)
-
-gen coverage_strokeIRD45to55 = (strokeIRD45to55_ub > 0 & strokeIRD45to55_lb < 0)
-gen coverage_strokeIRD55to65 = (strokeIRD55to65_ub > 0 & strokeIRD55to65_lb < 0)
-gen coverage_strokeIRD65to75 = (strokeIRD65to75_ub > 0 & strokeIRD65to75_lb < 0)
-gen coverage_strokeIRD75to85 = (strokeIRD75to85_ub > 0 & strokeIRD75to85_lb < 0)
-gen coverage_strokeIRD85to95 = (strokeIRD85to95_ub > 0 & strokeIRD85to95_lb < 0)*/
-
-
 /*create summary variable for coverage for each parameter
 foreach x in coverage_strokeIRR45to55 coverage_strokeIRR55to65 coverage_strokeIRR65to75 ///
 coverage_strokeIRR75to85 coverage_strokeIRR85to95 ///
@@ -300,7 +286,11 @@ scalar p_`x' = r(mean)
 }	*/
 
 
-/***IRR results***/
+/******************************************/
+/***	summarize simulation results	***/
+*results summarized across different excel sheets
+/******************************************/
+/***sheet 1: IRR results***/
 putexcel A1=("Scenario") ///
 B1=("IRR 45to55") C1=("strokelnIRR45to55") D1=("empSE(IRR 45to55)") E1=("avgSE(lnIRR 45to55)") ///
 F1=("IRR 55to65") G1=("strokelnIRR55to65") H1=("empSE(IRR 55to65)") I1=("avgSE(lnIRR 55to65)") ///
@@ -316,7 +306,7 @@ R$outputrow=(mean_strokeIRR85to95) S$outputrow=(mean_strokelnIRR85to95) T$output
 using SimulationResults_N`N_rounded'_B`B', sheet("Stroke_IRR") modify
 
 
-/***IRD results***/
+/***sheet 2: IRD results***/
 putexcel A1=("Scenario") ///
 B1=("IRD 45to55") C1=("empSE(IRD 45to55)") D1=("avgSE(IRD 45to55)") ///
 E1=("IRD 55to65") F1=("empSE(IRD 55to65)") G1=("avgSE(IRD 55to65)") ///
@@ -332,7 +322,7 @@ N$outputrow=(mean_strokeIRD85to95) O$outputrow=(empSE_strokeIRD85to95) P$outputr
 using SimulationResults_N`N_rounded'_B`B', sheet("Stroke_IRD") modify
 
 
-/***IR results per 1,000 person-years***/
+/***sheet 3: IR results per 1,000 person-years***/
 putexcel A1=("Scenario") ///
 B1=("IR/10000 PYs 45to55 whites") C1=("IR/10000 PYs 55to65 whites") ///
 D1=("IR/10000 PYs 65to75 whites") E1=("IR/10000 PYs 75to85 whites") ///
@@ -348,7 +338,7 @@ J$outputrow=(mean_strokerate75to85_exp1) K$outputrow=(mean_strokerate85to95_exp1
 using SimulationResults_N`N_rounded'_B`B', sheet("Stroke_IR10000py") modify
 
 
-/***# people at risk for stroke and PYs***/
+/***sheet 4: # people at risk for stroke and PYs***/
 putexcel A1=("Scenario") ///
 B1=("# strokes 45to55 whites") C1=("PYs 45to55 whites") ///
 D1=("# strokes 55to65 whites") E1=("PYs 55to65 whites") ///
@@ -374,7 +364,7 @@ T$outputrow=(mean_nstrokes85to95_exp1) U$outputrow=(mean_ptime85to95_exp1) ///
 using SimulationResults_N`N_rounded'_B`B', sheet("Nstks_PYs") modify
 
 
-/**Pull death info**/
+/**sheet 5: Pull death info**/
 putexcel A1=("Scenario") ///
 B1=("N whites at birth") ///
 C1=("Median surv age whites") D1=("P alive age 45 whites") ///
@@ -408,7 +398,7 @@ Z$outputrow=(mean_p_alive90_exp1) AA$outputrow=(mean_p_alive95_exp1) ///
 using SimulationResults_N`N_rounded'_B`B', sheet("Surv") modify
 
 
-/*distributions of U and N at risk at each age*/
+/*sheet 6: distributions of U and N at risk at each age*/
 putexcel A1=("Scenario") ///
 B1=("mean U at risk birth white") C1=("mean U at risk 45 white") D1=("mean U at risk 50 white") E1=("mean U at risk 55 white") ///
 F1=("mean U at risk 60 white") G1=("mean U at risk 65 white") H1=("mean U at risk 70 white") ///
@@ -430,7 +420,7 @@ W$outputrow=(mean_meanUatrisk90_exp1) ///
 using SimulationResults_N`N_rounded'_B`B', sheet("meanUatrisk") modify
 
 
-/*N at risk at each age*/
+/*sheet 7: N at risk at each age*/
 putexcel A1=("Scenario") ///
 B1=("N at risk 45 white") C1=("N at risk 50 white") D1=("N at risk 55 white") ///
 E1=("N at risk 60 white") F1=("N at risk 65 white") G1=("N at risk 70 white") ///
@@ -451,7 +441,7 @@ R$outputrow=(mean_Natrisk75_exp1) S$outputrow=(mean_Natrisk80_exp1) T$outputrow=
 U$outputrow=(mean_Natrisk90_exp1) ///
 using SimulationResults_N`N_rounded'_B`B', sheet("Natrisk") modify
 
-/*N strokes at risk at each age*/
+/*sheet 8: N strokes at risk at each age*/
 putexcel A1=("Scenario") ///
 B1=("N strokes 45-50 white") C1=("N strokes 50-55 white") D1=("N strokes 55-60 white") ///
 E1=("N strokes 60-65 white") F1=("N strokes 65-70 white") G1=("N strokes 70-75 white") ///
@@ -472,7 +462,7 @@ R$outputrow=(mean_nstrokes75to80_exp1) S$outputrow=(mean_nstrokes80to85_exp1) T$
 U$outputrow=(mean_nstrokes90to95_exp1) ///
 using SimulationResults_N`N_rounded'_B`B', sheet("Nstrokes") modify
 
-/*P strokes at risk at each age*/
+/*sheet 9: P strokes at risk at each age*/
 putexcel A1=("Scenario") ///
 B1=("P strokes 45-50 white") C1=("P strokes 50-55 white") D1=("P strokes 55-60 white") ///
 E1=("P strokes 60-65 white") F1=("P strokes 65-70 white") G1=("P strokes 70-75 white") ///
@@ -494,15 +484,22 @@ U$outputrow=(mean_p_stroke90to95_exp1) ///
 using SimulationResults_N`N_rounded'_B`B', sheet("Pstroke") modify
 
 
-
-/***export data to Excel***/
+/******************************************/
+/***	export data to Excel		***/
+*one row = one simulated sample
+/******************************************/
 export excel using EachSimulationResults_N`N_rounded'_B`B', sheet("$causalscenario") sheetmodify firstrow(variables)
 
-/***save data***/
+/******************************************/
+/***	save data in Stata		***/
+*one row = one simulated sample
+/******************************************/
 save "each_sim_results_$causalscenario.dta", replace
 
 
-/***histograms***/
+/******************************************/
+/***	histograms of mean U at risk	***/
+/******************************************/
 twoway (histogram meanUatrisk0_exp0, fcolor(none) lcolor(blue)) ///
        (histogram meanUatrisk0_exp1, fcolor(none) lcolor(red)), ///
 	   xlabel(-1.5(0.5)1.5) legend(order(1 "white" 2 "black")) graphregion(fcolor(white)) title("$causalscenario: mean U at risk, birth", color(black) size(med))
