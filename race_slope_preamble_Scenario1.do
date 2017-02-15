@@ -20,7 +20,7 @@ global g1_25to30 = 	0.79
 global g1_30to35 = 	0.78
 global g1_35to40 = 	0.77
 global g1_40to45 = 	0.74
-*values for ages 45+ identified from search loop because strokes begin occuring, stroke increase risk of death, and exposure increases stroke risk
+*values for ages 45+ identified from search loop because strokes begin occurring, stroke increase risk of death, and exposure increases stroke risk
 global g1_45to50 = 	.622
 global g1_50to55 = 	.58
 global g1_55to60 = 	.426
