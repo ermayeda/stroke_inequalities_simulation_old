@@ -825,7 +825,7 @@ replace stroke85to95 = 1 if (stroke85to90==1 | stroke90to95==1)
 
 
 /**********************************************************************************/
-/***	MODELS																***/
+/***	MODELS									***/							***/
 /**********************************************************************************/
 
 ******************************************/
@@ -898,12 +898,12 @@ foreach x in 45to55 55to65 65to75 75to85 85to95 {
 	qui stptime if (exposure==1), title(person-years) per(10000)
 	scalar nstrokes`x'_exp1 = r(failures)
 	scalar ptime`x'_exp1 = r(ptime)
-	scalar strokerate10000pys`x'_exp1 = r(rate)
+	scalar strokerate`x'_exp1 = r(rate)
 	*stroke IR for whites
 	qui stptime if (exposure==0), title(person-years) per(10000)
 	scalar nstrokes`x'_exp0 = r(failures)
 	scalar ptime`x'_exp0 = r(ptime)
-	scalar strokerate10000pys`x'_exp0 = r(rate)
+	scalar strokerate`x'_exp0 = r(rate)
 	*stroke IRR and IRD for blacks vs. whites
 	qui stir exposure
 	scalar strokeIRR`x' = r(irr)
