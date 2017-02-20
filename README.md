@@ -9,5 +9,5 @@ Outline of simulation study procedures:
 Explanation of Stata files:
 (1) master_simulation.do: Calls all of the necessary files to run B iterations of sample generation for each causal scenario. 
 (2) data_generation_analysis.do: Data-generation and analysis file. The specific causal scenario depends on the input parameters specified in the preamble file.
-(3) race_slope_preamble_ScenarioX.do (where X=1, 2, or 3. X=1 refers to Scenario A, X=2 refers to Scenario B, and X=3 refers to Scenario C): This file creates global variables for the specific input parameters for each causal scenario.
+(3) preamble_ScenarioX.do (where X=1, 2, or 3. X=1 refers to Scenario A, X=2 refers to Scenario B, and X=3 refers to Scenario C): This file creates global variables for the specific input parameters for each causal scenario.
 (4) run_simulation.do: runs B iterations of sample generation and analysis for each causal scenario, summarizes results across each scenario, and stores summarized results in an Excel file. 
