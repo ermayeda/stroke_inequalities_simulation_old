@@ -476,13 +476,13 @@ using SimulationResults_N`N_rounded'_B`B', sheet("Pstroke") modify
 
 /**************************************************************************************************/
 /***	export data to Excel									***/
-/***	one row = one simulated sample
+/***	one row = one simulated sample								***/
 /**************************************************************************************************/
 export excel using EachSimulationResults_N`N_rounded'_B`B', sheet("$causalscenario") sheetmodify firstrow(variables)
 
 /**************************************************************************************************/
 /***	save data in Stata									***/
-/***	one row = one simulated sample
+/***	one row = one simulated sample								***/
 /**************************************************************************************************/
 save "each_sim_results_$causalscenario.dta", replace
 
