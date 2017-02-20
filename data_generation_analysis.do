@@ -908,7 +908,7 @@ foreach x in 45to55 55to65 65to75 75to85 85to95 {
 	qui stir exposure
 	scalar strokeIRR`x' = r(irr)
 	scalar strokelnIRR`x' = ln(r(irr))
-	*scalar strokelnIRR`x'_SE = sqrt((1/nstrokes`x'_exp1)+(1/nstrokes`x'_exp0)) 
+	scalar strokelnIRR`x'_SE = sqrt((1/nstrokes`x'_exp1)+(1/nstrokes`x'_exp0)) 
 	scalar strokeIRR`x'_ub = r(ub_irr)
 	scalar strokeIRR`x'_lb = r(lb_irr)
 	scalar strokeIRD`x' = r(ird)*10000
