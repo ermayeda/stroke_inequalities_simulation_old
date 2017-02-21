@@ -74,7 +74,7 @@ global stk_lambda_exp0_85to90 = .014
 global stk_lambda_exp0_90to95 = .0178
 
 /*baseline hazard of stroke (exp=1 blacks)*/
-global stk_lambda_delta = 0.002 *age-constant incidence rate difference for exposure=1 vs. exposure=0
+global stk_lambda_delta = 0.002 //age-constant incidence rate difference for exposure=1 vs. exposure=0
 global stk_lambda_exp1_45to50 = 	$stk_lambda_exp0_45to50 + $stk_lambda_delta
 global stk_lambda_exp1_50to55 = 	$stk_lambda_exp0_50to55 + $stk_lambda_delta
 global stk_lambda_exp1_55to60 =		$stk_lambda_exp0_55to60 + $stk_lambda_delta

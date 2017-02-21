@@ -1,7 +1,7 @@
 /**********************************************************************************/
-/***	Scenario $causalscenario (1=A, 2=B, 3=C)				***/
-/***	Modify the local parameters by changing the preamble file called	***/
-/***	to modify the scenario.							***/
+/***	Scenario $causalscenario (1=A, 2=B, 3=C)								***/
+/***	Modify the local parameters by changing the preamble file called		***/
+/***	to modify the scenario.													***/
 /**********************************************************************************/
 
 set more off
@@ -14,7 +14,7 @@ gen id = _n
 
 
 /*Step 1: Set parameters*/
-do race_slope_preamble_$causalscenario.do
+do preamble_$causalscenario.do
 
 *specify prevalence of exposure
 local pexp = $pexp 	

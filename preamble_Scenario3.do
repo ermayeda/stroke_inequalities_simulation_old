@@ -11,8 +11,8 @@ global pexp = 0.5
 *parameters for death 
 //effect of exposure on log hazard of death, based on US life tables for 1919-1921 birth cohort 
 *values for ages 45+ identified from search loop because U influences death risk from birth for exposure=1 in this scenario
-global g1_0to1 =	  .194
-global g1_1to5 = 	  .334
+global g1_0to1 =	 .194
+global g1_1to5 = 	 .334
 global g1_5to10 = 	.186
 global g1_10to15 = 	.59799999
 global g1_15to20 = 	.92399999
@@ -74,7 +74,7 @@ global stk_lambda_exp0_85to90 = .0142
 global stk_lambda_exp0_90to95 = .0178 
 
 /*baseline hazard of stroke (exp=1 blacks)*/
-global stk_lambda_delta = 0.002 *age-constant incidence rate difference for exposure=1 vs. exposure=0
+global stk_lambda_delta = 0.002 	//age-constant incidence rate difference for exposure=1 vs. exposure=0
 global stk_lambda_exp1_45to50 = 	$stk_lambda_exp0_45to50 + $stk_lambda_delta
 global stk_lambda_exp1_50to55 = 	$stk_lambda_exp0_50to55 + $stk_lambda_delta
 global stk_lambda_exp1_55to60 =		$stk_lambda_exp0_55to60 + $stk_lambda_delta
