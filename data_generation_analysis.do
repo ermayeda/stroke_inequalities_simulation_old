@@ -358,6 +358,7 @@ replace survage = strokeage if (strokedeath45to50==1)
 *Generate indicator for stroke death before age 50
 gen strokedeath50 = 0
 replace strokedeath50 = 1 if (strokedeath45to50==1)
+replace death50 = 1 if strokedeath50==1	
 
 
 /*Interval 50-55*/
@@ -400,6 +401,7 @@ replace survage = strokeage if (strokedeath50to55==1)
 *Generate indicator for stroke death before age 55
 gen strokedeath55 = 0
 replace strokedeath55 = 1 if (strokedeath45to50==1 | strokedeath50to55==1)
+replace death55 = 1 if strokedeath55==1	
 
 
 /*Interval 55-60*/
@@ -441,6 +443,7 @@ replace survage = strokeage if (strokedeath55to60==1)
 *Generate indicator for stroke death before age 60
 gen strokedeath60 = 0
 replace strokedeath60 = 1 if (strokedeath45to50==1 | strokedeath50to55==1 | strokedeath55to60==1)
+replace death60 = 1 if strokedeath60==1	
 
 
 /*Interval 60-65*/
@@ -483,6 +486,7 @@ replace survage = strokeage if (strokedeath60to65==1)
 gen strokedeath65 = 0
 replace strokedeath65 = 1 if (strokedeath45to50==1 | strokedeath50to55==1 | strokedeath55to60==1 | ///
 	strokedeath60to65==1)
+replace death65 = 1 if strokedeath65==1	
 
 
 /*Interval 65-70*/
@@ -525,6 +529,7 @@ replace survage = strokeage if (strokedeath65to70==1)
 gen strokedeath70 = 0
 replace strokedeath70 = 1 if (strokedeath45to50==1 | strokedeath50to55==1 | strokedeath55to60==1 | ///
 	strokedeath60to65==1 | strokedeath65to70==1)
+replace death70 = 1 if strokedeath70==1	
 	
 
 /*Interval 70-75*/
@@ -567,6 +572,7 @@ replace survage = strokeage if (strokedeath70to75==1)
 gen strokedeath75 = 0
 replace strokedeath75 = 1 if (strokedeath45to50==1 | strokedeath50to55==1 | strokedeath55to60==1 | ///
 	strokedeath60to65==1 | strokedeath65to70==1 | strokedeath70to75==1)
+replace death75 = 1 if strokedeath75==1	
 	
 
 /*Interval 75-80*/
@@ -609,6 +615,7 @@ replace survage = strokeage if (strokedeath75to80==1)
 gen strokedeath80 = 0
 replace strokedeath80 = 1 if (strokedeath45to50==1 | strokedeath50to55==1 | strokedeath55to60==1 | ///
 	strokedeath60to65==1 | strokedeath65to70==1 | strokedeath70to75==1 | strokedeath75to80==1)
+replace death80 = 1 if strokedeath80==1	
 	
 
 /*Interval 80-85*/
@@ -652,7 +659,8 @@ gen strokedeath85 = 0
 replace strokedeath85 = 1 if (strokedeath45to50==1 | strokedeath50to55==1 | strokedeath55to60==1 | ///
 	strokedeath60to65==1 | strokedeath65to70==1 | strokedeath70to75==1 | strokedeath75to80==1 | ///
 	strokedeath80to85==1)
-	
+replace death85 = 1 if strokedeath85==1
+		
 
 /*Interval 85-90*/
 ***a. Survival
@@ -695,6 +703,7 @@ gen strokedeath90 = 0
 replace strokedeath90 = 1 if (strokedeath45to50==1 | strokedeath50to55==1 | strokedeath55to60==1 | ///
 	strokedeath60to65==1 | strokedeath65to70==1 | strokedeath70to75==1 | strokedeath75to80==1 | ///
 	strokedeath80to85==1 | strokedeath85to90==1)
+replace death90 = 1 if strokedeath90==1
 	
 
 /*Interval 90-95*/
@@ -706,7 +715,7 @@ gen survtime90to95 = -ln(RV_90to95)/(`lambda_90to95'*exp(`g1_90to95'*exposure +`
 *Generate death indicator for interval 90-95
 gen death90to95 = 0 if (death90==0)
 replace death90to95 = 1 if (survtime90to95 < 5)
-replace survage = 90 + survtime90to95 if (death90to95==1)
+replace survage = 90 + survtime90to95 if (survtime90to95!=.) 	
 *Generate indicator for death before age 95
 gen death95 = 0
 replace death95 = 1 if survage < 95
@@ -739,15 +748,13 @@ gen strokedeath95 = 0
 replace strokedeath95 = 1 if (strokedeath45to50==1 | strokedeath50to55==1 | strokedeath55to60==1 | ///
 	strokedeath60to65==1 | strokedeath65to70==1 | strokedeath70to75==1 | strokedeath75to80==1 | ///
 	strokedeath80to85==1 | strokedeath85to90==1 | strokedeath90to95==1)
+replace death95 = 1 if strokedeath95==1
 	
 	
 /*Stroke and death not generated for ages 95+*/
 
 *everyone dies
 gen death = 1
-
-*top code survage at 95
-*replace survage = 95 if survage > 95
 
 
 *iv. Generate variables for stroke and stroke death between ages 45 to 95

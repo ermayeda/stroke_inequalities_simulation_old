@@ -395,10 +395,10 @@ B1=("mean U at risk birth white") C1=("mean U at risk 45 white") D1=("mean U at 
 F1=("mean U at risk 60 white") G1=("mean U at risk 65 white") H1=("mean U at risk 70 white") ///
 I1=("mean U at risk 75 white") J1=("mean U at risk 80 white") K1=("mean U at risk 85 white") ///
 L1=("mean U at risk 90 white") ///
-M1=("mean U at risk birth black") N2=(mean_meanUatrisk0_exp0)  O1=("mean U at risk 45 black") P1=("mean U at risk 50 black") Q1=("mean U at risk 55 black") ///
-R1=("mean U at risk 60 black") S1=("mean U at risk 65 black") T1=("mean U at risk 70 black") ///
-U1=("mean U at risk 75 black") V1=("mean U at risk 80 black") W1=("mean U at risk 85 black") ///
-X1=("mean U at risk 90 black") ///
+M1=("mean U at risk birth black") N2=("mean U at risk 45 black") O1=("mean U at risk 50 black") P1=("mean U at risk 55 black") ///
+Q1=("mean U at risk 60 black") R1=("mean U at risk 65 black") S1=("mean U at risk 70 black") ///
+T1=("mean U at risk 75 black") U1=("mean U at risk 80 black") V1=("mean U at risk 85 black") ///
+W1=("mean U at risk 90 black") ///
 A$outputrow=("$causalscenario") ///
 B$outputrow=(mean_meanUatrisk0_exp0)  C$outputrow=(mean_meanUatrisk45_exp0) D$outputrow=(mean_meanUatrisk50_exp0) E$outputrow=(mean_meanUatrisk55_exp0) ///
 F$outputrow=(mean_meanUatrisk60_exp0) G$outputrow=(mean_meanUatrisk65_exp0) H$outputrow=(mean_meanUatrisk70_exp0) ///
