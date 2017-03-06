@@ -835,7 +835,7 @@ replace stroke85to95 = 1 if (stroke85to90==1 | stroke90to95==1)
 /***	MODELS																	***/
 /**********************************************************************************/
 
-******************************************/
+/******************************************/
 *pull N
 scalar N= _N
 
@@ -898,7 +898,6 @@ foreach x in 45 50 55 60 65 70 75 80 85 90 95 {
 
 /******************************************/
 *age-stratified incidence rates by exposure, incidence rate differences, and incidence rate ratios
-/*temp loop code*/ 
 foreach x in 45to55 55to65 65to75 75to85 85to95 {
 	qui stset strokeage, failure(stroke`x'==1) id(id) enter(strokeage`x'_start) exit(strokeage`x'_end)
 	*stroke IR for blacks
