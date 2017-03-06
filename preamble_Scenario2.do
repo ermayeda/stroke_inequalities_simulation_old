@@ -1,5 +1,5 @@
 /******************************************************************************/
-/***	Scenario 2/B (U influences stroke but and mortality).					        ***/
+/***	Scenario 2/B (U influences stroke but and mortality).				***/
 /******************************************************************************/
 
 /*Step 1: Set parameters*/
