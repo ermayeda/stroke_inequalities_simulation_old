@@ -395,7 +395,7 @@ B1=("mean U at risk birth white") C1=("mean U at risk 45 white") D1=("mean U at 
 F1=("mean U at risk 60 white") G1=("mean U at risk 65 white") H1=("mean U at risk 70 white") ///
 I1=("mean U at risk 75 white") J1=("mean U at risk 80 white") K1=("mean U at risk 85 white") ///
 L1=("mean U at risk 90 white") ///
-M1=("mean U at risk birth black") N2=("mean U at risk 45 black") O1=("mean U at risk 50 black") P1=("mean U at risk 55 black") ///
+M1=("mean U at risk birth black") N1=("mean U at risk 45 black") O1=("mean U at risk 50 black") P1=("mean U at risk 55 black") ///
 Q1=("mean U at risk 60 black") R1=("mean U at risk 65 black") S1=("mean U at risk 70 black") ///
 T1=("mean U at risk 75 black") U1=("mean U at risk 80 black") V1=("mean U at risk 85 black") ///
 W1=("mean U at risk 90 black") ///
