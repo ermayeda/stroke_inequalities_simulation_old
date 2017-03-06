@@ -13,7 +13,7 @@ foreach causalscenario in 1 2 3 {
 	
 	global outputrow = `causalscenario'+1 
 	
-	global B = 25 //desired number of iterations of sample generation 
+	global B = 2000 //desired number of iterations of sample generation 
 	
 	include run_simulation.do
 	
