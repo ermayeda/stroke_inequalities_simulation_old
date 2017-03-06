@@ -416,9 +416,9 @@ B1=("N at risk 45 white") C1=("N at risk 50 white") D1=("N at risk 55 white") //
 E1=("N at risk 60 white") F1=("N at risk 65 white") G1=("N at risk 70 white") ///
 H1=("N at risk 75 white") I1=("N at risk 80 white") J1=("N at risk 85 white") ///
 K1=("N at risk 90 white") ///
-L1=("N at risk 45 black") M1=("N at risk 50black") N1=("N at risk 55 black") ///
-O1=("N at risk 60 black") P1=("N at risk 65black") Q1=("N at risk 70 black") ///
-R1=("N at risk 75 black") S1=("N at risk 80black") T1=("N at risk 85 black") ///
+L1=("N at risk 45 black") M1=("N at risk 50 black") N1=("N at risk 55 black") ///
+O1=("N at risk 60 black") P1=("N at risk 65 black") Q1=("N at risk 70 black") ///
+R1=("N at risk 75 black") S1=("N at risk 80 black") T1=("N at risk 85 black") ///
 U1=("N at risk 90 black") ///
 A$outputrow=("$causalscenario") ///
 B$outputrow=(mean_Natrisk45_exp0) C$outputrow=(mean_Natrisk50_exp0) D$outputrow=(mean_Natrisk55_exp0) ///
@@ -491,7 +491,7 @@ save "each_sim_results_$causalscenario.dta", replace
 /***	histograms of mean U at risk-these figures are not included in paper-Figure 4			***/
 /***	plots the average mean U by age and race for each scenario; these histograms			***/
 /***	show the distribution of mean U by race for each age group and scenario  				***/
-/***	(one plot for each age group and each scenario).												***/
+/***	(one plot for each age group and each scenario).										***/
 /**************************************************************************************************/
 twoway (histogram meanUatrisk0_exp0, fcolor(none) lcolor(blue)) ///
        (histogram meanUatrisk0_exp1, fcolor(none) lcolor(red)), ///
